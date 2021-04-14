@@ -6,7 +6,16 @@ public class WithdrawTransaction  extends Transaction{
 
     @Override
     void doTransaction() {
-        user.removeFromAccountBalance(amount);
-        user.addTransaction(this);
+       if ( user.removeFromAccountBalance(amount)){
+           user.addTransaction(this);
+           //
+           DBHelper.updateUser(user);
+           DBHelper.addTransaction(this);
+           //
+           System.out.println(amount +" added to your account");
+       } else {
+           System.out.println("you cant do this withdraw because amount is bigger than your account balance");
+       }
+        System.out.println("your current account balance is " + user.getAccountBalance());
     }
 }

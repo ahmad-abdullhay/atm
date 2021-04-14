@@ -1,17 +1,100 @@
 import java.util.LinkedList;
+import java.util.Scanner;
 
 public class User {
    private String userID;
    private String userPin;
    private int accountBalance;
    private LinkedList<Transaction> transactionsHistoryList;
+
+    public User(String userID, String userPin, int accountBalance) {
+        this.userID = userID;
+        this.userPin = userPin;
+        this.accountBalance = accountBalance;
+        this.transactionsHistoryList = new LinkedList<>();
+    }
+
     void addToAccountBalance (int amount){
         accountBalance+=amount;
     }
-    void removeFromAccountBalance (int amount){
-        accountBalance-=amount;
+    boolean removeFromAccountBalance (int amount){
+        if (accountBalance - amount >= 0){
+            accountBalance-=amount;
+            return true;
+        }
+        return false;
+    }
+    public String getAccountBalance() {
+        return String.valueOf(accountBalance);
     }
     void addTransaction (Transaction transaction){
         transactionsHistoryList.add(transaction);
     }
+    boolean checkUser (String id,String password){
+        if (id.equals(userID) && password.equals(userPin))
+            return  true;
+        return false;
+    }
+
+    void userRun (){
+        while (true){
+            Scanner scanner = new Scanner(System.in);
+
+            System.out.println("press 1 to deposit");
+            System.out.println("press 2 to withdraw");
+            System.out.println("press 3 to transfer money");
+            System.out.println("press 4 to print transactions history");
+            System.out.println("press 5 to logout");
+            String input = scanner.nextLine().trim();
+            if (input.equals("1") )
+                Transaction.depositMenu();
+            if (input.equals("2") )
+                Transaction.withdrawMenu();
+            if (input.equals("3") )
+                Transaction.transferMenu();
+            if (input.equals("4") )
+                this.printTransactionsHistory();
+            if (input.equals("5") )
+               return;
+
+        }
+    }
+    void printTransactionsHistory (){
+
+
+    }
+    static void adminRun (){
+        while (true){
+            System.out.println("press 1 to add new user");
+            System.out.println("press 2 to logout");
+            Scanner scanner = new Scanner(System.in);
+            if (scanner.nextLine().trim().equals("1") )
+                addNewUserMenu ();
+            if (scanner.nextLine().trim().equals("2"))
+                return;
+        }
+    }
+  private static void addNewUserMenu (){
+      System.out.println("please enter user id");
+      Scanner scanner = new Scanner(System.in);
+      String id = scanner.nextLine();
+      if (isUserExist(id) != null){
+          System.out.println("this id is already exist");
+          System.out.println("please try again with another id");
+          return;
+      }
+      System.out.println("please enter user pin");
+      String pin = scanner.nextLine();
+      DBHelper.addNewUser(id,pin);
+      System.out.println("user added successfully");
+
+    }
+   static User isUserExist(String id){
+        for (User user : Main.allUser)
+            if(user.userID.equals(id))
+                return user;
+        return null;
+    }
+
+
 }
