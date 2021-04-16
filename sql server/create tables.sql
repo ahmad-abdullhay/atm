@@ -3,7 +3,6 @@ Id int primary key,
 password varchar(20),
 accountBalance int,
 )
-select * from Users
 create table oneUserTransactions (
   amount int,
   userId int FOREIGN KEY REFERENCES Users(id),
