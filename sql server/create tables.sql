@@ -8,7 +8,6 @@ create table oneUserTransactions (
   amount int,
   userId int FOREIGN KEY REFERENCES Users(id),
 )
-insert into oneUserTransactions values (-10,111)
 
 create table twoUsersTransactions (
   amount int,
@@ -17,4 +16,3 @@ create table twoUsersTransactions (
 
 )
 
-select * from twoUsersTransactions where firstUserId = 222 or secondUserId = 222
