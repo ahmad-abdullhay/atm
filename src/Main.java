@@ -6,9 +6,12 @@ public class Main {
    static User currentUser;
     Main (){
        allUser =  DBHelper.getAllUser();
+       DBHelper.readTransactionList();
     }
     public static void main(String[] args) {
         System.out.println("welcome in our ATM APP ");
+        DBHelper.connectToDatabase();
+
         Main mainRun = new Main();
         while (true){
             mainRun.loginMenu();
@@ -23,6 +26,7 @@ public class Main {
         System.out.println("please enter your pin");
         String pin = scanner.nextLine();
         if (isAdminCheck(id,pin)){
+            System.out.println("Admin logged in");
             User.adminRun();
             return;
         }
@@ -38,13 +42,18 @@ public class Main {
         System.out.println("please check your id or your password and try again");
     }
     boolean isAdminCheck (String id,String password){
-        if (id.equals("admin")&& password.equals("admin"))
-            return true;
-        return false;
+        return id.equals("admin") && password.equals("admin");
     }
     User login(String id,String password){
         for (User user : allUser) {
             if (user.checkUser(id,password))
+                return user;
+        }
+        return null;
+    }
+  static   User getUserById (String id){
+        for (User user : allUser) {
+            if (user.getId().equals(id))
                 return user;
         }
         return null;

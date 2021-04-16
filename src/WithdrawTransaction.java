@@ -8,11 +8,9 @@ public class WithdrawTransaction  extends Transaction{
     void doTransaction() {
        if ( user.removeFromAccountBalance(amount)){
            user.addTransaction(this);
-           //
            DBHelper.updateUser(user);
            DBHelper.addTransaction(this);
-           //
-           System.out.println(amount +" added to your account");
+           System.out.println(amount +" pulled from your account");
        } else {
            System.out.println("you cant do this withdraw because amount is bigger than your account balance");
        }

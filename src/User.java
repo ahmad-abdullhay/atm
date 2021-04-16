@@ -31,20 +31,19 @@ public class User {
         transactionsHistoryList.add(transaction);
     }
     boolean checkUser (String id,String password){
-        if (id.equals(userID) && password.equals(userPin))
-            return  true;
-        return false;
+        return id.equals(userID) && password.equals(userPin);
     }
 
     void userRun (){
         while (true){
             Scanner scanner = new Scanner(System.in);
-
+            System.out.println();
             System.out.println("press 1 to deposit");
             System.out.println("press 2 to withdraw");
             System.out.println("press 3 to transfer money");
             System.out.println("press 4 to print transactions history");
             System.out.println("press 5 to logout");
+            System.out.println("press 6 to quit the program");
             String input = scanner.nextLine().trim();
             if (input.equals("1") )
                 Transaction.depositMenu();
@@ -56,21 +55,38 @@ public class User {
                 this.printTransactionsHistory();
             if (input.equals("5") )
                return;
+            if (input.equals("6")){
+                System.out.println("thank you for using our app");
+                System.exit(0);
+            }
+
 
         }
     }
     void printTransactionsHistory (){
-
-
+        for (Transaction transaction : transactionsHistoryList){
+            if (transaction instanceof TransferTransaction)
+                System.out.println("transaction from : "+transaction.user.getId() + " to : "+ ((TransferTransaction) transaction).secondUser.getId() + " amount = "+transaction.amount);
+        }
+        for (Transaction transaction : transactionsHistoryList){
+            if (transaction instanceof DepositTransaction)
+                System.out.println("Deposit Transaction amount = " +transaction.amount );
+        }
+        for (Transaction transaction : transactionsHistoryList){
+            if (transaction instanceof WithdrawTransaction)
+                System.out.println("Withdraw Transaction amount = " +transaction.amount );
+        }
     }
     static void adminRun (){
         while (true){
+            System.out.println();
             System.out.println("press 1 to add new user");
             System.out.println("press 2 to logout");
             Scanner scanner = new Scanner(System.in);
-            if (scanner.nextLine().trim().equals("1") )
+            String input = scanner.nextLine().trim();
+            if (input.equals("1") )
                 addNewUserMenu ();
-            if (scanner.nextLine().trim().equals("2"))
+            if (input.equals("2"))
                 return;
         }
     }
@@ -78,6 +94,11 @@ public class User {
       System.out.println("please enter user id");
       Scanner scanner = new Scanner(System.in);
       String id = scanner.nextLine();
+      if (!id.matches("[0-9]+")){
+          System.out.println("id must be only numbers");
+          System.out.println("please try again with another id");
+          return;
+      }
       if (isUserExist(id) != null){
           System.out.println("this id is already exist");
           System.out.println("please try again with another id");
@@ -86,6 +107,7 @@ public class User {
       System.out.println("please enter user pin");
       String pin = scanner.nextLine();
       DBHelper.addNewUser(id,pin);
+      Main.allUser.add(new User(id,pin,0));
       System.out.println("user added successfully");
 
     }
@@ -96,5 +118,7 @@ public class User {
         return null;
     }
 
-
+    public String getId() {
+        return userID;
+    }
 }
